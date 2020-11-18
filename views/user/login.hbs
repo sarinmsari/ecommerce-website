@@ -4,6 +4,10 @@
             <div class="col-md-6">
                 <h2 class="text-center">LogIn</h2>
                 <form action="/login" method="POST" >
+                    <p class="error" style="color: red;font-size:13px;">
+                        {{loginError}}
+                    </p>
+                    
                     <label for="">Email Address</label>
                     <input type="email" name="Email" class="form-control">
 

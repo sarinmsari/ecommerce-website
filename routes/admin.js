@@ -26,9 +26,18 @@ router.post('/addProduct',(req,res,next)=>{
     })
   })
 })
-router.get('/editProduct',(req,res,next)=>{
-  
+router.get('/editProduct/:id',async (req,res,next)=>{
+  let product=await productHelper.getProductDetails(req.params.id)
+  res.render('./admin/editProduct',{admin:true,product})
+  console.log(product);
+
 })
+router.post('/editProduct/:id',(req,res)=>{
+  productHelper.updateProduct(req.params.id,req.body).then(()=>{
+    res.redirect('/admin/')
+  })
+})
+
 router.get('/deleteProduct/:id',(req,res,next)=>{
   let proId=req.params.id
   console.log(proId);
@@ -36,6 +45,7 @@ router.get('/deleteProduct/:id',(req,res,next)=>{
     res.redirect('/admin/')
   })
 })
+
 
 
 module.exports = router;

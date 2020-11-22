@@ -1,19 +1,28 @@
-<section class="container mt-5">
-    <div class="row">
-        <p>cart is empty</p>
-        {{#each products}}
-
-        <div class="col-md-3 p-3">
-            <div class="card" style="width: 15rem; height:20rem">
-                <img class="card-img-top" src="/productImages/{{this._id}}.jpg" alt={{this.Name}} style="height:8rem">
-                <div class="card-body">
-                    <h5 class="card-title">{{this.Name}}</h5>
-                    <p class="card-text">{{this.Description}}</p>
-                    <a href="#" class="btn btn-primary">Add to Cart</a>
-                </div>
-            </div>
-        </div>
-
-        {{/each}}
+<section>
+    <div class="container">
+        <table class="table mt-5">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td><img style="height: 70px" src="/productImages/{{this._id}}.jpg" alt="{{this.Name}}"></td>
+                    <td>{{this.Name}}</td>
+                    <td>
+                        <button class="cart-item-count mr-3">-</button>x
+                        <button class="cart-item-count mr-3">+</button>
+                    </td>
+                    <td>
+                        <a href="" class="btn btn-danger">Remove</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
 </section>

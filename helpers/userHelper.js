@@ -61,13 +61,15 @@ module.exports = {
           db.get()
             .collection(collection.CART_COLLECTION)
             .updateOne(
+              { user: objectId(userId) },
               { "products.item": objectId(proId) },
               {
                 $inc: { "products.$.quantity": 1 },
               }
-            ).then(()=>{
-              resolve()
-            })
+            )
+            .then(() => {
+              resolve();
+            });
         } else {
           db.get()
             .collection(collection.CART_COLLECTION)
@@ -84,7 +86,7 @@ module.exports = {
       } else {
         let cartObj = {
           user: objectId(userId),
-          products: [proObj]
+          products: [proObj],
         };
         db.get()
           .collection(collection.CART_COLLECTION)
@@ -102,25 +104,32 @@ module.exports = {
         .collection(collection.CART_COLLECTION)
         .aggregate([
           {
-            $match: { user: objectId(userId) }
+            $match: { user: objectId(userId) },
           },
           {
-            $unwind:'$products'
+            $unwind: "$products",
           },
           {
-            $project:{
-              item:'$products.item',
-              quantity:'$products.quantity'
-            }
+            $project: {
+              item: "$products.item",
+              quantity: "$products.quantity",
+            },
           },
           {
-            $lookup:{
-              from:collection.PRODUCT_COLLECTION,
-              localField:'item',
-              foreignField:'_id',
-              as:'product'
-            }
-          }
+            $lookup: {
+              from: collection.PRODUCT_COLLECTION,
+              localField: "item",
+              foreignField: "_id",
+              as: "product",
+            },
+          },
+          {
+            $project: {
+              item: 1,
+              quantity: 1,
+              product: { $arrayElemAt: ["$product", 0] },
+            },
+          },
         ])
         .toArray();
       resolve(cartItems);
@@ -137,6 +146,22 @@ module.exports = {
         count = cart.products.length;
       }
       resolve(count);
+    });
+  },
+  changeProductQuantity: (details) => {
+    return new Promise((resolve, reject) => {
+      details.count = parseInt(details.count);
+      db.get()
+        .collection(collection.CART_COLLECTION)
+        .updateOne(
+          { _id: objectId(details.cart), "products.item": objectId(details.product) },
+          {
+            $inc: { "products.$.quantity": details.count },
+          }
+        )
+        .then((response) => {
+          resolve();
+        });
     });
   },
 };

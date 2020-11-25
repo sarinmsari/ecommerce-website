@@ -16,7 +16,8 @@
                     <td>{{this.product.Name}}</td>
                     <td>
                         <button class="cart-item-count mr-3"
-                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>{{this.quantity}}
+                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+                        <span id="{{this.product._id}}">{{this.quantity}}</span>
                         <button class="cart-item-count mr-3"
                             onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
                     </td>
@@ -31,17 +32,26 @@
 </section>
 
 <script>
-    changeQuantity=(cartId,proId,count)=>{
+    changeQuantity = (cartId, proId, count) => {
+        let quantity = parseInt(document.getElementById(proId), innerHTML)
+        count = parseInt(count)
+
         $.ajax({
-            url:'/change-product-quantity',
-            data:{
-                cart:cartId,
-                product:proId,
-                count:count
+            url: '/change-product-quantity',
+            data: {
+                cart: cartId,
+                product: proId,
+                count: count,
+                quantity: quantity
             },
-            method:'post',
-            success:(response)=>{
-                alert(response)
+            method: 'post',
+            success: (response) => {
+                if (response.removeProduct) {
+                    alert("product removed from cart")
+                    location.reload()
+                } else {
+                    document.getElementById(proId).innerHTML = quantity + count
+                }
             }
         })
     }

@@ -61,8 +61,7 @@ module.exports = {
           db.get()
             .collection(collection.CART_COLLECTION)
             .updateOne(
-              { user: objectId(userId) },
-              { "products.item": objectId(proId) },
+              {user: objectId(userId), "products.item": objectId(proId) },
               {
                 $inc: { "products.$.quantity": 1 },
               }
